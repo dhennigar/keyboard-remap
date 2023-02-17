@@ -1,14 +1,10 @@
-// Remaps CapsLock to Control
-// Future plans:
-//      - remap Control to Windows only on IBM
-//      - add tapped escape function
+// Remaps CapsLock to Control (on all keyboards) and Control to Windows (for IBM only)
 
 #include "interception.h"
 #include "utils.h"
 
 #include <iostream>
 #include <cstring>
-// #include <windows.h>
 
 InterceptionKeyStroke rcontrol_down  = { 0x1D, INTERCEPTION_KEY_DOWN | INTERCEPTION_KEY_E0 };
 InterceptionKeyStroke lcontrol_down  = { 0x1D, INTERCEPTION_KEY_DOWN };
@@ -70,9 +66,11 @@ int main()
         if(interception_is_keyboard(device))
         {
             InterceptionKeyStroke &keystroke = *(InterceptionKeyStroke *) &stroke;
+
             if(is_lenovo == -1) {
                 if(keystroke.code == 0x1D) keystroke = control_to_windows(keystroke);
             }
+
             if(keystroke.code == 0x3A) keystroke = caps_to_control(keystroke);
         }
 
